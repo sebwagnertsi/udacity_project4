@@ -6,15 +6,15 @@ from pydantic import BaseModel
 
 from fastapi import HTTPException
 
-# Declare the data object with its components and their type.
-class TaggedItem(BaseModel):
-    name: str
-    tags: Union[str, list] 
-    item_id: int
+# # Declare the data object with its components and their type.
+# class TaggedItem(BaseModel):
+#     name: str
+#     tags: Union[str, list] 
+#     item_id: int
 
-class Data(BaseModel):
-    feature_1: float
-    feature_2: str
+# class Data(BaseModel):
+#     feature_1: float
+#     feature_2: str
 
 # Instantiate the app.
 app = FastAPI()
@@ -25,14 +25,14 @@ async def say_hello():
     return {"greeting": "Hello World!"}
 
 
-@app.post("/ingest_data/")
-async def ingest_data(item: Data):
+# @app.post("/ingest_data/")
+# async def ingest_data(item: Data):
 
-    if item.feature_1 <0:
-        raise HTTPException(status_code=400, detail="Feature 1 must be greater than 0")
-    if len(item.feature_2)>280:
-        raise HTTPException(status_code=400, detail="Feature 2 must be less than 280 characters")
-    return item
+#     if item.feature_1 <0:
+#         raise HTTPException(status_code=400, detail="Feature 1 must be greater than 0")
+#     if len(item.feature_2)>280:
+#         raise HTTPException(status_code=400, detail="Feature 2 must be less than 280 characters")
+#     return item
 
 # @app.get("/items/{item_id}")
 # async def get_items(item_id: int, count: int = 1):
