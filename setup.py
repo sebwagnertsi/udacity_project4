@@ -1,8 +1,8 @@
 import setuptools
 
 setuptools.setup(
-    name="starter",
+    name="ML DevOps",
     version="1.0.0",
-    description="Starter code.",
+    description="Project 4 code",
     author="Sebastian Wagner",
 )
