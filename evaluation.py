@@ -34,18 +34,55 @@ def run_train_test_evaluation():
     print(f"Precision: {precision}, Recall: {recall}, F1: {fbeta}")
     return precision, recall, fbeta
 
-def run_slice_evaluation(model, slice_name):
+def run_slice_evaluation(model, data, slice_name):
 
-    data = get_clean_training_data()
     X, y = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
     
-    preds = model.predict(X)
-    precision, recall, fbeta = compute_model_metrics(y, preds)
+    slice_preds = model.predict(X)
+    precision, recall, fbeta = compute_model_metrics(y, slice_preds)
 
-    print(f"Precision: {precision}, Recall: {recall}, F1: {fbeta}")
-    return precision, recall, fbeta
+    distinct_values = data[slice_name].unique()
+
+    output = ''
+    results = {}
+    for dv in distinct_values:
+        indices = data[data[slice_name] == dv].index
+        # print(f"Indices where {slice_name} equals {dv}: {indices}")
+        y_slice = y[indices]
+        X_slice = X[indices]
+
+        slice_preds = model.predict(X_slice)
+        precision, recall, fbeta = compute_model_metrics(y_slice, slice_preds)
+
+        output = f"Column: {slice_name} | Value: {dv} | Precision: {precision}, Recall: {recall}, F1: {fbeta}\n"
+        print(output)
+
+        key = f'{slice_name}___{dv}'
+        results[key] = {"precision": precision, "recall": recall, "f1": fbeta}
+    return results, output
+
+def run_all_slices_evaluation():
+    with open(Config.model_output_path, 'rb') as f:
+        model = joblib.load(f)
+    
+        data = get_clean_training_data()
+
+        categorical_features = set()
+        for column in data.select_dtypes(include=['object']).columns:
+            categorical_features.add(column)        
+        categorical_features.remove(Config.label_column)
+
+        results = []
+        output_text = ''
+        for category in categorical_features:
+            res, output = run_slice_evaluation(model, data, category)
+            results.append(res)
+            output_text += output
+
+        with open(Config.eval_slice_output_path, 'w') as f:
+            joblib.dump(output, f)
 
 
 if __name__ == '__main__':
+    run_all_slices_evaluation()
     
-    run_train_test_evaluation()
