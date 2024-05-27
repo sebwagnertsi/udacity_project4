@@ -15,6 +15,7 @@ class Config:
     
     eval_mode = 'cross_val' # 'cross_val' or 'test_split
     eval_test_split = 0.3
+    eval_slice_output_path = 'slice_output.txt'
 
     model_output_path = 'model/model.pkl'
 
