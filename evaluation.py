@@ -17,8 +17,8 @@ def run_cross_validation():
     model = Config.get_fresh_model()
 
     # Perform 10-fold cross validation
-    scores = cross_val_score(model, X, y, cv=10)
-    print("Cross Validation Scores:", scores)
+    scores = cross_val_score(model, X, y, cv=10, scoring='f1')
+    print("Cross Validation F1 Scores:", scores)
 
 def run_train_test_evaluation():
     data = get_clean_training_data()
