@@ -1,6 +1,6 @@
 from train_model import train_and_store_model, run_cross_validation, run_train_test_evaluation
 from preprocess_data import clean_data, get_clean_training_data
-
+from evaluation import run_all_slices_evaluation
 
 
 
@@ -17,6 +17,9 @@ def run_full_process():
     
     # Training final model
     model = train_and_store_model()
+
+    # Run the all slices evaluation with model
+    run_all_slices_evaluation(model)
 
 if __name__=='__main__':
     run_full_process()
