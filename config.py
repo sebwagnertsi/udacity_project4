@@ -10,11 +10,16 @@ class Config:
     
     data_path = 'data/census.csv'
     data_cleaned_path = 'data/cleaned_census.csv'
+
+    data_validation_path = 'data/census_validation.csv'
+    data_cleaned_validation_path = 'data/cleaned_census_validation.csv'
+    
     data_preprocessed_path = 'data/'
     encoders_path = 'data/encoders'
     
-    eval_mode = 'cross_val' # 'cross_val' or 'test_split
+    eval_mode = 'test_split' # 'cross_val' or 'test_split
     eval_test_split = 0.3
+    eval_validation_split = 0.2
     eval_slice_output_path = 'slice_output.txt'
 
     model_output_path = 'model/model.pkl'

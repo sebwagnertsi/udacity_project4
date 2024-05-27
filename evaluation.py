@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 
 from ml.model import compute_model_metrics
 from ml.data import preprocess_data
-from preprocess_data import get_clean_training_data
+from preprocess_data import get_clean_training_data, get_validation_data
 from config import Config
 
 
@@ -31,16 +31,24 @@ def run_train_test_evaluation():
     preds = model.predict(X_test)
     precision, recall, fbeta = compute_model_metrics(y_test, preds)
 
+    print("Test/Train set evaluation:")
+    print(f"Precision: {precision}, Recall: {recall}, F1: {fbeta}")
+    return precision, recall, fbeta
+
+def run_validation(model):
+    data = get_validation_data()
+    X, y = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
+
+    preds = model.predict(X)
+    precision, recall, fbeta = compute_model_metrics(y, preds)
+
+    print("On Validation set:")
     print(f"Precision: {precision}, Recall: {recall}, F1: {fbeta}")
     return precision, recall, fbeta
 
 def run_slice_evaluation(model, data, slice_name):
 
     X, y = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
-    
-    slice_preds = model.predict(X)
-    precision, recall, fbeta = compute_model_metrics(y, slice_preds)
-
     distinct_values = data[slice_name].unique()
 
     output = ''
@@ -54,33 +62,40 @@ def run_slice_evaluation(model, data, slice_name):
         slice_preds = model.predict(X_slice)
         precision, recall, fbeta = compute_model_metrics(y_slice, slice_preds)
 
-        output = f"Column: {slice_name} | Value: {dv} | Precision: {precision}, Recall: {recall}, F1: {fbeta}\n"
-        print(output)
+        # support = 0.0
+        # if len(indices)>0:
+        #     support = len(indices) / len(data)
+
+        output += f"Column: {slice_name}, Value: {dv}, Support: {len(indices)}/{len(data)} || Precision: {precision}, Recall: {recall}, F1: {fbeta}\n"
 
         key = f'{slice_name}___{dv}'
         results[key] = {"precision": precision, "recall": recall, "f1": fbeta}
+
+    # print(output)
     return results, output
 
-def run_all_slices_evaluation():
-    with open(Config.model_output_path, 'rb') as f:
-        model = joblib.load(f)
+def run_all_slices_evaluation(model=None):
+
+    if model is None:
+        with open(Config.model_output_path, 'rb') as f:
+            model = joblib.load(f)
     
-        data = get_clean_training_data()
+    data = get_validation_data()
 
-        categorical_features = set()
-        for column in data.select_dtypes(include=['object']).columns:
-            categorical_features.add(column)        
-        categorical_features.remove(Config.label_column)
+    categorical_features = set()
+    for column in data.select_dtypes(include=['object']).columns:
+        categorical_features.add(column)        
+    categorical_features.remove(Config.label_column)
 
-        results = []
-        output_text = ''
-        for category in categorical_features:
-            res, output = run_slice_evaluation(model, data, category)
-            results.append(res)
-            output_text += output
+    results = []
+    output_text = ''
+    for category in categorical_features:
+        res, output = run_slice_evaluation(model, data, category)
+        results.append(res)
+        output_text += output
 
-        with open(Config.eval_slice_output_path, 'w') as f:
-            joblib.dump(output, f)
+    with open(Config.eval_slice_output_path, 'w') as f:
+        f.write(output_text)
 
 
 if __name__ == '__main__':

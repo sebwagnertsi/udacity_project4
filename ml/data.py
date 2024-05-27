@@ -24,11 +24,11 @@ def preprocess_data(df: pd.DataFrame, initialize: bool = False, training=False):
         encoder = joblib.load(f'{Config.encoders_path}/encoder.pkl')
         lb = joblib.load(f'{Config.encoders_path}/lb.pkl')
 
-        label = None
-        if training: 
-            label = Config.label_column
+        # label = None
+        # if training: 
+        label = Config.label_column
 
-        X, y, encoder, lb = _process_data(df, list(categorical_features), label=label, training=training, encoder=encoder, lb=lb)
+        X, y, encoder, lb = _process_data(df, list(categorical_features), label=label, training=False, encoder=encoder, lb=lb)
     return X, y
 
 
