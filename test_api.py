@@ -47,7 +47,6 @@ def request_person_two():
 def test_api_locally_get_root():
     r = client.get("/")
     assert r.status_code == 200
-    assert 'Welcome' in r.json()
     assert 'Welcome' in r.content.decode('utf-8')
 
 def test_prediction_rich(request_person_two):
