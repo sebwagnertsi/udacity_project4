@@ -51,12 +51,12 @@ def test_api_locally_get_root():
 def test_prediction_rich(request_person_rich):
     data = json.dumps(request_person_rich)
     r = client.post("/predict", data=data)
-    assert r.json() == '>50K'
+    assert r.text == '">50K"'
 
 def test_prediction_poor(request_person_poor):
     data = json.dumps(request_person_poor)
     r = client.post("/predict", data=data)
-    assert r.json() == '<=50K'
+    assert r.text == '"<=50K"'
 
 def test_prediction_fail_improper_attribute_values(request_person_poor):
     data = request_person_poor
