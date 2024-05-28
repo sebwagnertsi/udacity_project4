@@ -1,5 +1,5 @@
 from train_model import train_and_store_model
-from preprocess_data import clean_data
+from preprocessing import clean_data
 from evaluation import run_all_slices_evaluation, run_train_test_evaluation, run_cross_validation, run_validation
 import warnings
 

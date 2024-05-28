@@ -6,14 +6,14 @@ from sklearn.model_selection import train_test_split
 
 from ml.model import compute_model_metrics
 from ml.data import preprocess_data
-from preprocess_data import get_clean_training_data, get_validation_data
+from preprocessing import get_clean_training_data, get_validation_data
 from config import Config
 
 
 def run_cross_validation():
 
     data = get_clean_training_data()
-    X, y = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
+    X, y, _, _ = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
     model = Config.get_fresh_model()
 
     # Perform 10-fold cross validation
@@ -22,7 +22,7 @@ def run_cross_validation():
 
 def run_train_test_evaluation():
     data = get_clean_training_data()
-    X, y = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
+    X, y, _, _ = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
     model = Config.get_fresh_model()
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=Config.eval_test_split, random_state=42)
@@ -37,7 +37,7 @@ def run_train_test_evaluation():
 
 def run_validation(model):
     data = get_validation_data()
-    X, y = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
+    X, y, _, _ = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
 
     preds = model.predict(X)
     precision, recall, fbeta = compute_model_metrics(y, preds)
@@ -48,7 +48,7 @@ def run_validation(model):
 
 def run_slice_evaluation(model, data, slice_name):
 
-    X, y = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
+    X, y, _, _ = preprocess_data(data, training=True) # Apply the column transformations on the data, and retrieve the y column
     distinct_values = data[slice_name].unique()
 
     output = ''

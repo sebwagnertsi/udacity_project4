@@ -7,7 +7,7 @@ from main import app
 client = TestClient(app)
 
 @pytest.fixture
-def request_person_poor():
+def request_person_one():
     return {
             'age': 25,
             'workclass': 'State-gov',
@@ -26,7 +26,7 @@ def request_person_poor():
         }
 
 @pytest.fixture
-def request_person_rich():
+def request_person_two():
     return {
             'age': 55,
             'workclass': 'Private',
@@ -47,29 +47,32 @@ def request_person_rich():
 def test_api_locally_get_root():
     r = client.get("/")
     assert r.status_code == 200
+    assert 'Welcome' in r.json()
+    assert 'Welcome' in r.content.decode('utf-8')
 
-def test_prediction_rich(request_person_rich):
-    data = json.dumps(request_person_rich)
+def test_prediction_rich(request_person_two):
+    data = json.dumps(request_person_two)
     r = client.post("/predict", data=data)
-    print(r.text)
-    assert ">50K" in r.text
+    # print(r.content.decode('utf-8'))
+    
+    assert ">50K" in r.json()
 
-def test_prediction_poor(request_person_poor):
-    data = json.dumps(request_person_poor)
+def test_prediction_poor(request_person_one):
+    data = json.dumps(request_person_one)
     r = client.post("/predict", data=data)
-    print(r.text)
-    assert '<=50K' in r.text
+    # print(r.content.decode('utf-8'))
+    assert '<=50K' in r.json()
 
-def test_prediction_fail_improper_attribute_values(request_person_poor):
-    data = request_person_poor
+def test_prediction_fail_improper_attribute_values(request_person_one):
+    data = request_person_one
     data['marital_status'] = 42 # improper type for marital status
 
     r = client.post("/predict", data=data)
 
     assert r.status_code >= 300  # should be some kind of error
 
-def test_dataframe_conversion(request_person_poor):    
-    data_df = conv_item_to_df(request_person_poor)
+def test_dataframe_conversion(request_person_one):    
+    data_df = conv_item_to_df(request_person_one)
     assert data_df.shape == (1, 14)
     assert data_df['age'][0] == 25
     assert data_df['workclass'][0] == 'State-gov'

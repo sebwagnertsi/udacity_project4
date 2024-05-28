@@ -2,7 +2,7 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 from config import Config
 import joblib
 from pandas import DataFrame
-from preprocess_data import preprocess_data
+from preprocessing import preprocess_data
 
 # Optional: implement hyperparameter tuning.
 def train_model(X_train, y_train):

@@ -18,7 +18,7 @@ def clean_data():
     df_cleaned.to_csv(Config.data_cleaned_path, index=False)
 
     # Now initialize the encoders
-    X, y = preprocess_data(df_cleaned, initialize=True)
+    X, y, encoder, lb = preprocess_data(df_cleaned, initialize=True)
 
     # Save all the X and y values:
     pd.DataFrame(X).to_csv(Config.data_preprocessed_path+'/_X.csv', index=False)
@@ -31,7 +31,7 @@ def clean_data():
     df_cleaned.to_csv(Config.data_cleaned_validation_path, index=False)
 
     # use the previously initialized encoders
-    X, y = preprocess_data(df_cleaned, training=True)
+    X, y, _, _ = preprocess_data(df_cleaned, training=True)
 
     # Save all the X and y values:
     pd.DataFrame(X).to_csv(Config.data_preprocessed_path+'/_validation_X.csv', index=False)

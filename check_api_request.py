@@ -2,25 +2,19 @@ import requests
 from main import conv_item_to_df
 from ml.model import inference_from_df_with_labelconversion
 
-def test_api_request():
-    # url = 'http://localhost:8000/predict'
-    url = 'https://udacity-project4-mamn.onrender.com/predict'
-    data = request_person_rich()
-    response = requests.post(url, json=data)
-    print(response.text)
-    print(response.json())
+
 
 def test_api_request_unsuccessful():
-    # url = 'http://localhost:8000/predict'
-    url = 'https://udacity-project4-mamn.onrender.com/predict'
-    data = request_person_rich()
+    url = 'http://localhost:8000/predict'
+    # url = 'https://udacity-project4-mamn.onrender.com/predict'
+    data = request_person_two()
     data['additional_attribute'] = 'this should not be here'
 
     response = requests.post(url, json=data)
     print(response.text)
     print(response.json())
 
-def request_person_poor():
+def request_person_one():
     return {
             'age': 25,
             'workclass': 'State-gov',
@@ -37,7 +31,7 @@ def request_person_poor():
             'hours_per_week': 40,
             'native_country': 'United-States'
         }
-def request_person_rich():
+def request_person_two():
     return {
             'age': 55,
             'workclass': 'Private',
@@ -72,8 +66,30 @@ def test_inference_from_df(request_object):
     res = inference_from_df_with_labelconversion(conv_item_to_df(request_object))
     print(res)
 
+def test_api_request(data):
+    url = 'https://udacity-project4-mamn.onrender.com/predict'
+    response = requests.post(url, json=data)
+    print("Status code:", response.status_code)
+    # print("Response text:", response.text)
+    print("Response json:", response.json())
+
+
 if __name__=='__main__':
-    test_api_request()
-    # test_api_request_unsuccessful()
-    # test_inference_from_df(request_person_poor())
-    # test_inference_from_df(request_person_rich())
+    
+    print("##### Test API Request:")
+    test_api_request({
+            'age': 55,
+            'workclass': 'Private',
+            'fnlgt': 159449,
+            'education': 'Masters',
+            'education_num': 13,
+            'marital_status': 'Married-civ-spouse',
+            'occupation': 'Exec-managerial',
+            'relationship': 'Husband',
+            'race': 'White',
+            'sex': 'Male',
+            'capital_gain': 7500,
+            'capital_loss': 0,
+            'hours_per_week': 40,
+            'native_country': 'United-States'
+    })

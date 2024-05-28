@@ -3,7 +3,7 @@ import joblib
 
 from ml.model import train_model
 from ml.data import preprocess_data
-from preprocess_data import get_clean_training_data
+from preprocessing import get_clean_training_data
 from config import Config
 
 def train_and_store_model():
