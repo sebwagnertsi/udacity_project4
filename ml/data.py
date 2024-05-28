@@ -31,7 +31,7 @@ def preprocess_data(df: pd.DataFrame, initialize: bool = False, training:bool = 
             label = Config.label_column
 
         X, y, encoder, lb = _process_data(df, list(categorical_features), label=label, training=False, encoder=encoder, lb=lb)
-    return X, y
+    return X, y, encoder, lb
 
 
 

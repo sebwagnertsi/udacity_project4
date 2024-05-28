@@ -85,24 +85,32 @@ def inference_from_df(df: DataFrame):
     with open(Config.model_output_path, 'rb') as f:
         model = joblib.load(f)
         
-        X, y = preprocess_data(df, training=False)
+        X, y, encoder, lb = preprocess_data(df, training=False)
         preds = inference(model, X)
+        print(preds)
         return preds
     return None
 
-def convert_inf_results_to_label(preds):
+
+def inference_from_df_with_labelconversion(df: DataFrame):
     '''
-    Converts the predictions from the model to the original labels.
+    Loads the model and preprocess the data to make predictions.
+
     Inputs
     ------
-    preds: np.array
-        numpy array with the predictions
+    df : pd.DataFrame
+        Dataframe with the data to make predictions on.
 
     Returns:
     -----
-    np.array
-        Predictions converted to the original labels.
+    preds: np.array
+        Predictions from the model.
     '''
-    lb = joblib.load(Config.encoders_path+'/lb.pkl')
-    
-    return lb.inverse_transform(preds)
+    with open(Config.model_output_path, 'rb') as f:
+        model = joblib.load(f)
+        
+        X, y, encoder, lb = preprocess_data(df, training=False)
+        preds = inference(model, X)
+        print(preds)
+        return lb.inverse_transform(preds)
+    return None
