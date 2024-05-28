@@ -1,6 +1,8 @@
 from sklearn.metrics import fbeta_score, precision_score, recall_score
-from sklearn.ensemble import RandomForestClassifier
 from config import Config
+import joblib
+from pandas import DataFrame
+from preprocess_data import preprocess_data
 
 # Optional: implement hyperparameter tuning.
 def train_model(X_train, y_train):
@@ -62,5 +64,45 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
+        
     preds = model.predict(X)
     return preds
+
+def inference_from_df(df: DataFrame):
+    '''
+    Loads the model and preprocess the data to make predictions.
+
+    Inputs
+    ------
+    df : pd.DataFrame
+        Dataframe with the data to make predictions on.
+
+    Returns:
+    -----
+    preds: np.array
+        Predictions from the model.
+    '''
+    with open(Config.model_output_path, 'rb') as f:
+        model = joblib.load(f)
+        
+        X, y = preprocess_data(df, training=False)
+        preds = inference(model, X)
+        return preds
+    return None
+
+def convert_inf_results_to_label(preds):
+    '''
+    Converts the predictions from the model to the original labels.
+    Inputs
+    ------
+    preds: np.array
+        numpy array with the predictions
+
+    Returns:
+    -----
+    np.array
+        Predictions converted to the original labels.
+    '''
+    lb = joblib.load(Config.encoders_path+'/lb.pkl')
+    
+    return lb.inverse_transform(preds)

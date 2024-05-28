@@ -5,13 +5,15 @@ from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 from config import Config
 import joblib
 
-def preprocess_data(df: pd.DataFrame, initialize: bool = False, training=False):
+def preprocess_data(df: pd.DataFrame, initialize: bool = False, training:bool = False):#, training=False):
 
     categorical_features = set()
     for column in df.select_dtypes(include=['object']).columns:
         categorical_features.add(column)
     
-    categorical_features.remove(Config.label_column)
+    if Config.label_column in categorical_features:
+        categorical_features.remove(Config.label_column)
+        
     
     if initialize:
         X, y, encoder, lb = _process_data(df, list(categorical_features), label=Config.label_column, training=True, encoder=None, lb=None)
@@ -20,13 +22,13 @@ def preprocess_data(df: pd.DataFrame, initialize: bool = False, training=False):
         joblib.dump(encoder, f'{Config.encoders_path}/encoder.pkl')
         joblib.dump(lb, f'{Config.encoders_path}/lb.pkl')
 
-    else:   # Training oder inferenzszenario
+    else:   # Inferenzszenario
         encoder = joblib.load(f'{Config.encoders_path}/encoder.pkl')
         lb = joblib.load(f'{Config.encoders_path}/lb.pkl')
 
-        # label = None
-        # if training: 
-        label = Config.label_column
+        label = None
+        if training: 
+            label = Config.label_column
 
         X, y, encoder, lb = _process_data(df, list(categorical_features), label=label, training=False, encoder=encoder, lb=lb)
     return X, y
