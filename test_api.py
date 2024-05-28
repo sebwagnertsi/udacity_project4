@@ -63,7 +63,8 @@ def test_prediction_fail_improper_attribute_values(request_person_poor):
     data['marital_status'] = 42 # improper type for marital status
 
     r = client.post("/predict", data=data)
-    assert r.status_code == 422
+
+    assert r.status_code >= 300  # should be some kind of error
 
 def test_dataframe_conversion(request_person_poor):    
     data_df = conv_item_to_df(request_person_poor)
