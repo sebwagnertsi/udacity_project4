@@ -2,8 +2,8 @@
 numpy
 pandas
 scikit-learn
-pytest
+pytest==7.4.0
 requests
-fastapi==0.63.0
+fastapi==0.103.0
 uvicorn
 httpx

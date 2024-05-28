@@ -6,21 +6,22 @@ from ml.model import inference_from_df, inference_from_df_with_labelconversion
 
 def test_api_request():
     url = 'http://localhost:8000/predict'
+    url = 'https://udacity-project4-mamn.onrender.com/predict'
     data = request_person_rich()
     response = requests.post(url, json=data)
+    print(response.text)
     print(response.json())
 
 def test_api_request_unsuccessful():
     url = 'http://localhost:8000/predict'
+    url = 'https://udacity-project4-mamn.onrender.com/predict'
     data = request_person_rich()
     data['additional_attribute'] = 'this should not be here'
 
     response = requests.post(url, json=data)
+    print(response.text)
     print(response.json())
 
-
-
-# @pytest.fixture
 def request_person_poor():
     return {
             'age': 25,
@@ -74,7 +75,8 @@ def test_inference_from_df(request_object):
     print(res)
 
 if __name__=='__main__':
+    # test_api_request()
     # test_api_request_unsuccessful()
     test_inference_from_df(request_person_poor())
     test_inference_from_df(request_person_rich())
-    # test_dataframe_conversion(request_object())
+    test_dataframe_conversion(request_person_poor())
