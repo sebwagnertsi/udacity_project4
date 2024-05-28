@@ -3,22 +3,27 @@
 For additional information see the Model Card paper: https://arxiv.org/pdf/1810.03993.pdf
 
 ## Model Details
+
 A Random Forest Model using the standard scikit-learn parameters.
 Trained with scikit-learn 1.3.0
 
 ## Intended Use
+
 Classify income in two groups (<50k and >= 50k) based on the attributes: age,workclass,fnlgt,education,education-num,marital-status,occupation,relationship,race,sex,capital-gain,capital-loss,hours-per-week,native-country
 
 ## Training Data
+
 The census data as provided by the project starter kit. 
 Original source: https://archive.ics.uci.edu/dataset/20/census+income
 Initial Modifications: Removed whitespaces from the file.
 
 ## Evaluation Data
+
 I split the data into a train/test and validation set.
 The train/test set contains 27093 entries, the validation set contains 5468 entries.
 
 ## Metrics
+
 When trained with 70% of the (train/test) data, the remaining 30% yield the following results:
 Precision: 0.7376330619912336, Recall: 0.5943491422805247, F1: 0.6582844369935738
 
@@ -29,4 +34,5 @@ The results of the Model on the validation set are:
 Precision: 0.7347826086956522, Recall: 0.6310679611650486, F1: 0.678987545198875
 
 ## Ethical Considerations
+
 Some attributes are ethically problematic and should not be used.
