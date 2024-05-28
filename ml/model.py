@@ -5,6 +5,8 @@ from pandas import DataFrame
 from preprocessing import preprocess_data
 
 # Optional: implement hyperparameter tuning.
+
+
 def train_model(X_train, y_train):
     """
     Trains a machine learning model and returns it.
@@ -64,9 +66,10 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
-        
+
     preds = model.predict(X)
     return preds
+
 
 def inference_from_df(df: DataFrame):
     '''
@@ -84,7 +87,7 @@ def inference_from_df(df: DataFrame):
     '''
     with open(Config.model_output_path, 'rb') as f:
         model = joblib.load(f)
-        
+
         X, y, encoder, lb = preprocess_data(df, training=False)
         preds = inference(model, X)
         print(preds)
@@ -108,7 +111,7 @@ def inference_from_df_with_labelconversion(df: DataFrame):
     '''
     with open(Config.model_output_path, 'rb') as f:
         model = joblib.load(f)
-        
+
         X, y, encoder, lb = preprocess_data(df, training=False)
         preds = inference(model, X)
         print(preds)

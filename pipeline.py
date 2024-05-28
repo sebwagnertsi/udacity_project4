@@ -5,6 +5,7 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
+
 def run_full_process():
     print("Running full process")
 
@@ -17,10 +18,9 @@ def run_full_process():
     precision, recall, fbeta = run_train_test_evaluation()
 
     run_cross_validation()
-    
+
     # Train final model
     model = train_and_store_model()
-
 
     print("Validating model performance ######################")
     run_validation(model)
@@ -28,6 +28,6 @@ def run_full_process():
     # Run the all slices evaluation with model
     run_all_slices_evaluation(model)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     run_full_process()
-    

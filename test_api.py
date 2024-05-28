@@ -6,55 +6,60 @@ from main import conv_item_to_df
 from main import app
 client = TestClient(app)
 
+
 @pytest.fixture
 def request_person_one():
     return {
-            'age': 25,
-            'workclass': 'State-gov',
-            'fnlgt': 77516,
-            'education': 'Bachelors',
-            'education_num': 13,
-            'marital_status': 'Never-married',
-            'occupation': 'Adm-clerical',
-            'relationship': 'Not-in-family',
-            'race': 'White',
-            'sex': 'Male',
-            'capital_gain': 2174,
-            'capital_loss': 0,
-            'hours_per_week': 40,
-            'native_country': 'United-States'
-        }
+        'age': 25,
+        'workclass': 'State-gov',
+        'fnlgt': 77516,
+        'education': 'Bachelors',
+        'education_num': 13,
+        'marital_status': 'Never-married',
+        'occupation': 'Adm-clerical',
+        'relationship': 'Not-in-family',
+        'race': 'White',
+        'sex': 'Male',
+        'capital_gain': 2174,
+        'capital_loss': 0,
+        'hours_per_week': 40,
+        'native_country': 'United-States'
+    }
+
 
 @pytest.fixture
 def request_person_two():
     return {
-            'age': 55,
-            'workclass': 'Private',
-            'fnlgt': 159449,
-            'education': 'Masters',
-            'education_num': 13,
-            'marital_status': 'Married-civ-spouse',
-            'occupation': 'Exec-managerial',
-            'relationship': 'Husband',
-            'race': 'White',
-            'sex': 'Male',
-            'capital_gain': 7500,
-            'capital_loss': 0,
-            'hours_per_week': 40,
-            'native_country': 'United-States'
+        'age': 55,
+        'workclass': 'Private',
+        'fnlgt': 159449,
+        'education': 'Masters',
+        'education_num': 13,
+        'marital_status': 'Married-civ-spouse',
+        'occupation': 'Exec-managerial',
+        'relationship': 'Husband',
+        'race': 'White',
+        'sex': 'Male',
+        'capital_gain': 7500,
+        'capital_loss': 0,
+        'hours_per_week': 40,
+        'native_country': 'United-States'
     }
+
 
 def test_api_locally_get_root():
     r = client.get("/")
     assert r.status_code == 200
     assert 'Welcome' in r.content.decode('utf-8')
 
+
 def test_prediction_rich(request_person_two):
     data = json.dumps(request_person_two)
     r = client.post("/predict", data=data)
     # print(r.content.decode('utf-8'))
-    
+
     assert ">50K" in r.json()
+
 
 def test_prediction_poor(request_person_one):
     data = json.dumps(request_person_one)
@@ -62,15 +67,17 @@ def test_prediction_poor(request_person_one):
     # print(r.content.decode('utf-8'))
     assert '<=50K' in r.json()
 
+
 def test_prediction_fail_improper_attribute_values(request_person_one):
     data = request_person_one
-    data['marital_status'] = 42 # improper type for marital status
+    data['marital_status'] = 42  # improper type for marital status
 
     r = client.post("/predict", data=data)
 
     assert r.status_code >= 300  # should be some kind of error
 
-def test_dataframe_conversion(request_person_one):    
+
+def test_dataframe_conversion(request_person_one):
     data_df = conv_item_to_df(request_person_one)
     assert data_df.shape == (1, 14)
     assert data_df['age'][0] == 25
